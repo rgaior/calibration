@@ -1,0 +1,8 @@
+name, id, antenna_id, electronic_id, rotation
+Vieira, 433, 4, 4, 5
+Luis, 422, 1, 1, 4
+Orteguina, 431, 9, 9, 5
+Popey, 385, 10, 10, 6
+Chape, 384, 5, 5, 5
+Domo, 427, 3, 3, 4
+Juan, 432, 6, 6, 6

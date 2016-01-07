@@ -1,0 +1,8 @@
+name, id, antenna_id, electronic_id, rotation
+Santy, 339, 6, 10, 0
+Rula, 313, 2, 2, 0
+Nono, 340, 8, 8, -5 
+Jorge, 329, 4, 9, 1
+Eva, 330, 3, 3, 0
+Gilda, 334, 11, 7, 0 
+Gringa, 328, 5, 5, 2

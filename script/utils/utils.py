@@ -1,0 +1,48 @@
+import numpy as np
+
+
+###############################################
+####  reading functions                   #####
+###############################################
+
+
+def readpotardata(filename):
+    f = open(filename, 'r+')
+    x = np.array([])
+    y = np.array([])
+    for l in f:
+        x = np.append(x, float(l.split()[0]))
+        y = np.append(y, float(l.split()[1]))
+    return [x,y]
+
+
+
+
+
+
+###############################################
+#### conversion function (voltage to adc, #####
+#### voltage FE to voltage board etc... ) #####
+###############################################
+
+#adc counts to volt at the FE input (between 0-1V)
+def adctov_fe(adc):
+    return float(adc)/1024
+def v_fetoadc(vfe):
+    return float(vfe)*1024
+
+#voltage at front end to voltage at GIGAS/EASIER board
+def v_fetov_board(vfe):
+    return vfe*(-2)
+def v_boardtov_fe(vboard):
+    return vboard*(-1/2)
+
+#adc to v board (between -2 and 0 V)
+def adctov_board(adc):
+    return v_fetov_board(adctov_fe(adc))
+def v_boardtoadc(vboard):
+    return v_fetoadc(v_boardtov_fe(vboard))
+
+
+
+
