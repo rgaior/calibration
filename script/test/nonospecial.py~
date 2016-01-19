@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.pylab as plab
-from matplotlib.legend_handler import HandlerLine2D
 import numpy as np
 import os
 import sys
@@ -11,7 +10,7 @@ sys.path.append(utilspath)
 import utils
 
 #get the base of the field folder
-base = cwd + '/../../data/'
+base = cwd + '/../../data/potar/'
 
 ## data of the needed input power at 1.4GHz for a given rotation 
 ## for the voltage to be kept at -2V
@@ -21,6 +20,13 @@ datapotarcornet = base+ 'potarCornet.txt'
 #set the data in a list [rotation,power in dBm]
 datahelix = utils.readpotardata(datapotarhelix)
 datacornet = utils.readpotardata(datapotarcornet)
+
+fit = np.polyfit(datahelix[0],datahelix[1],2)
+
+p = np.poly1d(fit)
+
+
+print 'P at -2V for r = -5 = ', p(-5)
 
 
 fig = plt.figure(figsize=(8, 8))
@@ -35,6 +41,8 @@ ax1.plot(datahelix[0],datahelix[1],'b',lw=2,label='helix')
 ax1.plot([0],[-22],'bo',label='reference helix')
 ax1.plot(datacornet[0],datacornet[1],'g',lw=2,label='horn')
 ax1.plot([-13.5],[-18.8],'go',label='reference horn')
+x = np.linspace(-8,15)
+ax1.plot(x,p(x),'k--',lw=2,label='fit helix')
 
 plt.legend(loc=3)
 plt.show()

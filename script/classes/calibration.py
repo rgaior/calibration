@@ -1,10 +1,19 @@
 import utils
 import detector
 from numpy import interp
-helixfile = 'potarHelix.txt'
-hornfile = 'potarCornet.txt'
-installhelix = 'installHelix.txt'
-installhorn = 'installCornet.txt'
+
+# files containing the the adjustable resistor calibration
+helixfile = '/potar/potarHelix.txt'
+hornfile = '/potar/potarCornet.txt'
+
+#file containing the detector parameters (from installation document)
+installhelix = '/install/installHelix.txt'
+installhorn = '/install/installCornet.txt'
+
+#point set before installation in number of rotation
+refrotationhelix = 0
+refrotationhorn = -13.5
+
 
 class Calibration:
     def __init__(self, datafolder = '', 
@@ -19,18 +28,19 @@ class Calibration:
         self.resistorhorn = resistorhorn
         self.helixdet = helixdet
         self.horndet = horndet
-        self.boardslope = -10
+        self.boardslope = -10.4 # (cf thesis 1/0.0234*4.1)
 
     def reset(self):
         self.helixdet = []
         self.horndet = []
-
+    #get the calibration curve of the adjustable resistor
     def fillpotardata(self):
         resistorhelixfile = self.datafolder + helixfile
         self.resistorhelix = utils.readpotardata(resistorhelixfile)
         resistorhornfile = self.datafolder + hornfile
         self.resistorhorn = utils.readpotardata(resistorhornfile)
 
+    # fill one detector
     def filldetector(self, type, name):
         if type.lower() == 'cornet' or type.lower() == 'horn':
             file = self.datafolder + installhorn
@@ -47,7 +57,7 @@ class Calibration:
                 print 'detector not filled ! '            
             self.helixdet.append(det)
 
-
+    #fill the detectors parameters from a file in /data
     def filldetectors(self, type):
         file = ''
         if type.lower() == 'cornet' or type.lower() == 'horn':
@@ -93,9 +103,7 @@ class Calibration:
     ## we first find the power at -2V from the resistor calibration
     ## then we exptrapolate knowing the slope of the board.
     def getpoweratinstall(self, det):
-        #value of the nr of rotation set before installation (hard coded)
-        refrotationhelix = 0
-        refrotationhorn = -14.5
+        #value of the nr of rotation set before installation (hardcoded)
         # find the power at -2V from calibration
         ref = 0 
         rotation = 0 
@@ -107,7 +115,11 @@ class Calibration:
         if det.type == 'helix': 
             ref = refrotationhelix
             rotation = ref + det.rotation
-            poweratminus2 = interp(rotation,self.resistorhelix[0],self.resistorhelix[1])
+            #special case for nono:
+            if det.name.lower()=='nono':
+                poweratminus2 = -29.2
+            else:
+                poweratminus2 = interp(rotation,self.resistorhelix[0],self.resistorhelix[1])
         #now get the voltage difference between -2V and the voltage at install
         deltav = utils.adctov_board(det.meanBL) - (-2)
         poweratinstall = poweratminus2 + self.boardslope*deltav

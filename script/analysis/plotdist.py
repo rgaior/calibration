@@ -36,10 +36,12 @@ zenithhorn = np.array([])
 azhelix = np.array([])
 azhorn = np.array([])
 
+
 for det in cal.horndet:
     patinstallhorn = np.append(patinstallhorn, cal.getpoweratinstall(det))
     zenithhorn = np.append(zenithhorn, det.zenith)
     azhorn = np.append(azhorn, det.azimuth)
+
 for det in cal.helixdet:
     patinstallhelix = np.append(patinstallhelix, cal.getpoweratinstall(det))
     zenithhelix = np.append(zenithhelix, det.zenith)
