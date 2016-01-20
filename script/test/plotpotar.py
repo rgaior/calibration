@@ -11,7 +11,7 @@ sys.path.append(utilspath)
 import utils
 
 #get the base of the field folder
-base = cwd + '/../../data/'
+base = cwd + '/../../data/potar/'
 
 ## data of the needed input power at 1.4GHz for a given rotation 
 ## for the voltage to be kept at -2V

@@ -25,6 +25,7 @@ def readmonit(filename):
         thedate = date.fromtimestamp(stamp)
         x = np.append(x, thedate)
         y = np.append(y, float(l.split()[1]))
+#        print thedate, 'float(l.split()[1]) = ',float(l.split()[1])
     return [x,y]
 
 
@@ -54,5 +55,12 @@ def v_boardtoadc(vboard):
     return v_fetoadc(v_boardtov_fe(vboard))
 
  
-
-
+#combine error in dB
+def quadraticerrordB(err1, err2):
+    #errlin1 = np.power(10,0.1) - 1
+    errlin1 = np.power(10,float(err1)/10) - 1
+    errlin2 = np.power(10,float(err2)/10)  - 1
+    errtot = np.sqrt(errlin1*errlin1 + errlin2*errlin2)
+#    print 'error lin 1' , errlin1 ,' errlin2 = ', errlin2, 'errtot = ',errtot
+    errtotdb = 10*np.log10(errtot +1)
+    return errtotdb

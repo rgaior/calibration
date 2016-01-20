@@ -1,6 +1,7 @@
 import utils
 import detector
 from numpy import interp
+import numpy as np
 
 # files containing the the adjustable resistor calibration
 helixfile = '/potar/potarHelix.txt'
@@ -84,6 +85,19 @@ class Calibration:
             else:
                 self.helixdet.append(det)
 
+    def seterrorrotation(self, det, deltarotation):
+        refrotation = 0
+        ## done that way because data didn't give something very regular 
+        if det.type == 'horn': 
+            fit = np.polyfit(self.resistorhorn[0],self.resistorhorn[1],2)
+            errorfunction = np.poly1d([2*fit[0], fit[1]])
+            refrotation = refrotationhorn
+        if det.type == 'helix': 
+            fit = np.polyfit(self.resistorhelix[0],self.resistorhelix[1],2)
+            errorfunction = np.poly1d([2*fit[0], fit[1]])
+            refrotation = refrotationhelix
+        det.errorrotation = errorfunction(refrotation + det.rotation)*deltarotation
+
     def getdetector(self,name):
         found = False
         for det in self.horndet:
@@ -102,7 +116,7 @@ class Calibration:
     ## is described in a note.
     ## we first find the power at -2V from the resistor calibration
     ## then we exptrapolate knowing the slope of the board.
-    def getpoweratinstall(self, det):
+    def getpoweratinstall(self, det, whatbaseline):
         #value of the nr of rotation set before installation (hardcoded)
         # find the power at -2V from calibration
         ref = 0 
@@ -121,6 +135,10 @@ class Calibration:
             else:
                 poweratminus2 = interp(rotation,self.resistorhelix[0],self.resistorhelix[1])
         #now get the voltage difference between -2V and the voltage at install
-        deltav = utils.adctov_board(det.meanBL) - (-2)
+        if whatbaseline == 'install':
+            deltav = utils.adctov_board(det.meanBL) - (-2)
+        elif whatbaseline == 'monit':
+            deltav = utils.adctov_board(det.meanBLyear) - (-2)
+
         poweratinstall = poweratminus2 + self.boardslope*deltav
         return poweratinstall

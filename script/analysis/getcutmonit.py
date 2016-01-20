@@ -17,19 +17,43 @@ base = cwd + '/../../data/monit/'
 
 
 station = sys.argv[1]
-cutdate = sys.argv[2]
+cutdatestart = sys.argv[2]
+cutdatestop = sys.argv[3]
 
 #s = "01/12/2015"
-cut = datetime.datetime.strptime(cutdate, "%d/%m/%Y").date()
+if cutdatestart !='no':
+    cutstart = datetime.datetime.strptime(cutdatestart, "%d/%m/%Y").date()
+if cutdatestop !='no':
+    cutstop = datetime.datetime.strptime(cutdatestop, "%d/%m/%Y").date()
 #print cut.year
+#print cutstart
 
-
-data = base+ 'monit'+station+ '.txt'
+data = base+ 'monit'+station+ '2.txt'
 
 #set the data in a list [time, baseline [adc]]
 thedata = utils.readmonit(data)
-newtime = thedata[0][thedata[0] > cut]
-newbl = thedata[1][thedata[0] > cut]
+
+#print thedata[0]
+if cutdatestart =='no' and cutdatestop !='no'  :
+    print 'no start/ stop'
+    newtime = thedata[0][ (thedata[0] < cutstop)]
+    newbl = thedata[1][  (thedata[0] < cutstop)]
+
+if cutdatestart !='no' and cutdatestop =='no'  :
+    print 'no stop/ start'
+    newtime = thedata[0][  (thedata[0] > cutstart) ]
+    newbl = thedata[1][  (thedata[0] > cutstart) ]
+    
+if cutdatestart =='no' and cutdatestop =='no'  :
+    print 'no stop/ no start'
+    newtime = thedata[0]
+    newbl = thedata[1]
+
+if cutdatestart !='no' and cutdatestop !='no'  :
+    print 'stop/ start'
+    newtime = thedata[0][  (thedata[0] > cutstart) & (thedata[0] < cutstop)]
+    newbl = thedata[1][  (thedata[0] > cutstart) & (thedata[0] < cutstop)]
+
 
 totdays = (newtime[-1]- newtime[0]).total_seconds()/(24*3600)
 

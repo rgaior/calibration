@@ -28,7 +28,7 @@ class Calibration:
         self.resistorhorn = resistorhorn
         self.helixdet = helixdet
         self.horndet = horndet
-        self.boardslope = -10
+        self.boardslope = -10.4 # (cf thesis 1/0.0234*4.1)
 
     def reset(self):
         self.helixdet = []
@@ -115,7 +115,11 @@ class Calibration:
         if det.type == 'helix': 
             ref = refrotationhelix
             rotation = ref + det.rotation
-            poweratminus2 = interp(rotation,self.resistorhelix[0],self.resistorhelix[1])
+            #special case for nono:
+            if det.name.lower()=='nono':
+                poweratminus2 = -29.2
+            else:
+                poweratminus2 = interp(rotation,self.resistorhelix[0],self.resistorhelix[1])
         #now get the voltage difference between -2V and the voltage at install
         deltav = utils.adctov_board(det.meanBL) - (-2)
         poweratinstall = poweratminus2 + self.boardslope*deltav

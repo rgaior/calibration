@@ -16,10 +16,10 @@ class Detector:
         self.elecid = elecid
         #nr of rotation done at installation
         self.rotation = rotation
-        self.delrotation = delrotation
+#        self.delrotation = delrotation
         #monitoring baseline
         self.meanBL = meanBL
-        self.delBL = delBL
+#        self.delBL = delBL
         
     def fillwithline(self, data):
         self.name = data[0]

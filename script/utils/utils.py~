@@ -1,5 +1,5 @@
 import numpy as np
-
+from datetime import date
 
 ###############################################
 ####  reading functions                   #####
@@ -16,13 +16,16 @@ def readpotardata(filename):
     return [x,y]
 
 
-def readmonit(fileaname):
+def readmonit(filename):
     f = open(filename,'r+')
     x = np.array([])
     y = np.array([])
     for l in f:
-        x = np.append(x, float(l.split()[0]))
+        stamp = float(l.split()[0])
+        thedate = date.fromtimestamp(stamp)
+        x = np.append(x, thedate)
         y = np.append(y, float(l.split()[1]))
+#        print thedate, 'float(l.split()[1]) = ',float(l.split()[1])
     return [x,y]
 
 
