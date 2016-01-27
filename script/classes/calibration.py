@@ -27,10 +27,15 @@ class Calibration:
         self.datafolder = datafolder
         self.resistorhelix = resistorhelix
         self.resistorhorn = resistorhorn
+        #filter on board:
+        self.boardfilterhelix = []
+        self.boardfilterhorn = []
+
         self.helixdet = helixdet
         self.horndet = horndet
         self.boardslope = -10.4 # (cf thesis 1/0.0234*4.1)
-
+        
+        
     def reset(self):
         self.helixdet = []
         self.horndet = []

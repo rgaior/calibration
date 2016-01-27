@@ -1,0 +1,11 @@
+measure de Jacques David (LPNHE)
+Scope_42.csv	juste la carte hélice
+scope_43.csv	avec le bias-tee et son filtre intégré
+scope_44.csv	avec le bias-tee et son filtre intégré et son câble de 3,5m
+scope_45.csv	tout compris, avec l'ampli
+Conditions de mesures : voie 1 -> out carte en Volts (sur 50ohm)
+	      	      voie 2 -> rampe du générateur, de 0,5 à 2,5 GHz
+
+Injection -22dBm sauf scope_45.csv ou j'injecte -72 dBm
+
+Résultat moyenné sur 8 courbes.

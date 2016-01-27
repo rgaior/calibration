@@ -13,14 +13,14 @@ import utils
 
 base = cwd + '/../../data/monit/'
 
-station = 'Popey'
+station = sys.argv[1]
 data = base+ 'monit'+station+ '.txt'
 
 #set the data in a list [time, baseline [adc]]
 thedata = utils.readmonit(data)
 
 
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(10, 6))
 fig.suptitle('monit 300 days for '+ station, fontsize=14, fontweight='bold')
 
 ax1 = fig.add_subplot(121)
@@ -43,7 +43,7 @@ ax2 = fig.add_subplot(122)
 n, bins, patches = ax2.hist(thedata[1], 100, facecolor='green', alpha=0.75, label='horn')
 ax2.text(0.95, 0.90, 'mean = '+ str("%.2f" % np.mean(thedata[1])) + '\n'+ ' standard dev. = '+ str("%.2f" % np.std(thedata[1])),
         verticalalignment='bottom', horizontalalignment='right',
-        transform=ax1.transAxes,
+        transform=ax2.transAxes,
         color='black', fontsize=15)
  
 plt.show()

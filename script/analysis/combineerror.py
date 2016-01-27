@@ -65,7 +65,7 @@ plt.xlim(-34,-26)
 plt.ylim(-1,len(y_horn)+0.5)
 plt.xlabel('power [dBm]',fontsize=15)
 #expected value: -29.52
-expvaluehorn = -29.52
+expvaluehorn = -30.22
 exphorn = np.linspace(expvaluehorn,expvaluehorn,10)
 x = np.linspace(-20,20,10)
 plt.plot(exphorn,x,lw=2,label='expected')
@@ -79,7 +79,7 @@ plt.ylim(-1,len(y_helix)+0.5)
 plt.yticks(y_helix, namehelix)
 plt.xlabel('power [dBm]',fontsize=15)
 #expected value: -43.7
-expvaluehelix = -43.7
+expvaluehelix = -49.12
 exphelix = np.linspace(expvaluehelix,expvaluehelix,10)
 x = np.linspace(-20,20,10)
 plt.plot(exphelix,x,lw=2,label='expected')

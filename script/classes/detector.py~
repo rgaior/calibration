@@ -19,6 +19,9 @@ class Detector:
 #        self.delrotation = delrotation
         #monitoring baseline
         self.meanBL = meanBL
+        self.meanBLyear = 0
+        self.stdBLyear = 0
+        self.errorrotation = 0
 #        self.delBL = delBL
         
     def fillwithline(self, data):
@@ -30,6 +33,8 @@ class Detector:
         self.elecid = int(data[5])
         self.rotation = float(data[6])
         self.meanBL = float(data[7])
+        self.meanBLyear = float(data[8])
+        self.stdBLyear = float(data[9])
 
     def fill(self, installfile, name):
         f = open(installfile,'r+')

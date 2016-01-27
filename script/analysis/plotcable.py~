@@ -1,0 +1,75 @@
+import matplotlib.pyplot as plt
+import matplotlib.pylab as plab
+import matplotlib
+matplotlib.rc('xtick', labelsize=15) 
+matplotlib.rc('ytick', labelsize=15) 
+import numpy as np
+import os
+import sys
+cwd = os.getcwd()
+utilspath = cwd + '/../utils/'
+sys.path.append(utilspath)
+basefolder = cwd + '/../../data/filter/'
+def readcsv(filename):
+    f = open(filename,'r+')
+    x = np.array([])
+    y = np.array([])
+    for l in f:
+        x = np.append(x,float(l.split(',')[0]))
+        y = np.append(y,float(l.split(',')[1]))
+    return [x,y]
+
+def getjacquesmeas(filename,filename2):
+    f = open(filename,'r+')
+    f2 = open(filename2,'r+')
+    count = 0
+    header = 2
+    data1 = np.array([])
+    data2 = np.array([])
+    data3 = np.array([])
+    
+    data12 = np.array([])
+    data22 = np.array([])
+    data32 = np.array([])
+    
+    for l in f:
+        if count < header:
+            count+=1
+            continue
+        else:
+            sl = l.split(',')
+            data1 = np.append(data1, float(sl[0]))
+            data2 = np.append(data2, float(sl[1]))
+            data3 = np.append(data3, float(sl[2]))
+        count+=1
+
+    count = 0
+    for l in f2:
+        if count < header:
+            count+=1
+            continue
+        else:
+            sl = l.split(',')
+            data12 = np.append(data12, float(sl[0]))
+            data22 = np.append(data22, float(sl[1]))
+            data32 = np.append(data32, float(sl[2]))
+        count+=1
+
+    freq = np.linspace(0.5,2.5,len(data3))
+    diff = (data2 - data22)*10.4
+    f.close()
+    f2.close()
+    return [freq,diff]
+
+
+measdata = getjacquesmeas(basefolder+'/scope_43.csv',basefolder+'/scope_44.csv')
+
+plt.plot(measdata[0]*1000,measdata[1],'r',lw=2,label='meas. data (cable)')
+plt.xlabel('frequency [MHz]',fontsize=15)
+plt.ylabel('gain [dB]',fontsize=15)
+#plt.xlim(500,2000)
+#plt.ylim(-60,3)
+plt.xlim(1000,1500)
+plt.ylim(-4,2)
+plt.legend(ncol=3)
+plt.show()

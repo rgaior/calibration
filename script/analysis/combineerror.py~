@@ -70,6 +70,7 @@ exphorn = np.linspace(expvaluehorn,expvaluehorn,10)
 x = np.linspace(-20,20,10)
 plt.plot(exphorn,x,lw=2,label='expected')
 fig.tight_layout()
+plt.legend()
 
 fig2 = plt.figure(figsize=(6,8))
 #plt.subplot(121)
@@ -93,7 +94,7 @@ fig2.tight_layout()
 # ax2.set_yticks(y_helix, namehelix)
 # #plt.xlabel('Performance')
 # #plt.title('How fast do you want to go today?')
-
+plt.legend()
 plt.show()
 
 #utils.quadraticerrordB(1,2)
