@@ -9,8 +9,13 @@ import sys
 cwd = os.getcwd()
 utilspath = cwd + '/../utils/'
 sys.path.append(utilspath)
+classpath = cwd + '/../classes/'
+sys.path.append(classpath)
 import utils
+import detector
+import calibration
 basefolder = cwd + '/../../data/filter/'
+basedatafolder = cwd + '/../../data/'
 
 #first get the LNA gain:
 datafolder2 = '../../data/gain2/'
@@ -36,33 +41,60 @@ measbiast = utils.getjacquesmeas(basefolder+'/scope_42.csv',basefolder+'/scope_4
 meascable = utils.getjacquesmeas(basefolder+'/scope_43.csv',basefolder+'/scope_44.csv')
 
 #we interpolate w.r.t. the constructor data:
-freq = boardfilter[0]
+freq = np.arange(boardfilter[0][1],boardfilter[0][-1],1)
 newmeasbiast = np.interp(freq,measbiast[0]*1000,measbiast[1])
 newmeascable = np.interp(freq,meascable[0]*1000,meascable[1])
+newboard = np.interp(freq,boardfilter[0],boardfilter[1])
+calhelix = calibration.Calibration(datafolder = basedatafolder, type = 'helix')
+#fill the calibration information                                                                                                
+calhelix.fillcalibdata()
+
+#plt.plot(freq,newmeascable)
+#plt.plot(calhelix.cable[0],calhelix.cable[1])
+
+#plt.plot(freq,newmeasbiast)
+#plt.plot(calhelix.otherfilter[0],calhelix.otherfilter[1])
+
+#plt.plot(freq,boardfilter[1])
+#plt.plot(calhelix.boardfilter[0],calhelix.boardfilter[1])
+
+#plt.show()
 
 totgains = []
 gainbw = np.array([])
 for lnag in lnagain:
     newgain = np.interp(freq,lnag[0],lnag[1])
-    totgain = newgain + boardfilter[1]+ newmeasbiast + newmeascable
-#    totgain = newgain + boardfilter[1] + newmeasbiast + newmeascable
+#    totgain = newgain + newboard 
+    totgain = newgain + newboard + newmeasbiast + newmeascable
+    #    totgain = newgain + boardfilter[1] + newmeasbiast + newmeascable
     totgains.append(totgain)
-    
     gainlin = np.power(10, (totgain)/10)
+    #newgainlin = gainlin
     newgainlin = gainlin[(freq > 500) &  (freq <2000)]
     sum = np.sum(newgainlin)*(freq[1]- freq[0])*1e6
     gainbw = np.append(gainbw,10*np.log10(sum))
 #    print 'sum = ' , sum
-#    print 'sum dB = ' , 10*np.log10(sum)
+    print 'sum dB = ' , 10*np.log10(sum)
+
+
+
+# calhelix = calibration.Calibration(datafolder = basedatafolder, type = 'helix')
+# #fill the calibration information                                                                                                
+# calhelix.fillcalibdata()
+# totgainhelix = calhelix.gettotalgain()
+# print 'using a average gain we get: ', 10*np.log10(utils.integratebw(totgainhelix,'db'))
+
 
 fig = plt.figure(figsize=(8,5))
 #plt.subplot(131)
 for data,name in zip(totgains,snarray):
     plt.plot(freq,data,label=name)
+#    plt.plot(totgainhelix[0],totgainhelix[1],lw=2,label='helix')
     plt.xlabel('frequency [MHz]',fontsize=15)
     plt.ylabel('gain [dB]',fontsize=15)
     plt.xlim(500,2000)
     plt.ylim(-40,60)
+
 #plt.subplot(132)
 fig2 = plt.figure(figsize=(8,5))
 for data,name in zip(totgains,snarray):
@@ -70,7 +102,7 @@ for data,name in zip(totgains,snarray):
     plt.xlabel('frequency [MHz]',fontsize=15)
     plt.ylabel('gain [dB]',fontsize=15)
     plt.xlim(950,1500)
-    plt.ylim(45,50)
+    plt.ylim(45,55)
 
 fig3 = plt.figure(figsize=(5,5))
 ax = fig3.add_subplot(111)
@@ -79,10 +111,11 @@ ax.text(0.95, 0.90, 'mean = '+ str("%.2f" % np.mean(gainbw)) + '\n'+ ' standard 
         verticalalignment='bottom', horizontalalignment='right',
         transform=ax.transAxes,
         color='black', fontsize=15)
-ax.set_xlim(130,133)
+ax.set_xlim(134,136)
 ax.set_xlabel('10*log10(gain*bandwidth) [dB]', fontsize =15)
 ax.set_ylabel('entries',fontsize = 15)
-#plt.legend(fontsize=15)
+
+##plt.legend(fontsize=15)
 
 
 #    plt.legend()

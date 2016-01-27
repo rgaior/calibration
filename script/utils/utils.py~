@@ -39,7 +39,6 @@ def readminicircuitdata(filename):
         if count < header:
             count +=1
             continue
-        print l.split()
         onefreq = float(l.split()[0])
         onegain = float(l.split()[3])
         freq = np.append(freq,onefreq)
@@ -99,7 +98,11 @@ def getjacquesmeas(filename,filename2):
     f2.close()
     return [freq,diff]
 
-
+def writeintwocolumns(data, outname):
+    f = open(outname,'w+')
+    for x, y in zip(data[0],data[1]):
+        f.write(str(x) + ' ' + str(y) + '\n')
+    f.close()
 
 ###############################################
 #### conversion function (voltage to adc, #####

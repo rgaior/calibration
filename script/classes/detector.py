@@ -1,6 +1,9 @@
 import utils
 datafolder = '/Users/romain/work/Auger/EASIER/LPSC/calibration/data/'
 
+refrotationhelix = 0
+refrotationhorn = -13.5
+
 class Detector:
     def __init__(self, name = '', tankid = 0, type = '',
                  zenith = 0, azimuth = 0,
@@ -22,7 +25,7 @@ class Detector:
         self.meanBLyear = 0
         self.stdBLyear = 0
         self.errorrotation = 0
-#        self.delBL = delBL
+        self.refrotation = 0
         
     def fillwithline(self, data):
         self.name = data[0]
@@ -35,6 +38,10 @@ class Detector:
         self.meanBL = float(data[7])
         self.meanBLyear = float(data[8])
         self.stdBLyear = float(data[9])
+        if self.type == 'horn':
+            self.refrotation = refrotationhorn
+        if self.type == 'helix':
+            self.refrotation = refrotationhelix
 
     def fill(self, installfile, name):
         f = open(installfile,'r+')
@@ -62,5 +69,7 @@ class Detector:
         if self.type == 'helix':
             filename = datafolder + 'potarHelix.txt'
             data = readpotardata(filename)
+#        self.delBL = delBL
+
         return data
 

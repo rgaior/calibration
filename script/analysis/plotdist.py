@@ -25,14 +25,16 @@ if len(sys.argv) != 2:
 typeofbaseline= sys.argv[1]
 basefolder = cwd + '/../../data/'
 
-cal = calibration.Calibration(datafolder = basefolder)
-#first fill the calibration of the adjustable resistor
-cal.fillpotardata()
+calhorn = calibration.Calibration(datafolder = basefolder,type= 'horn')
+calhelix = calibration.Calibration(datafolder = basefolder,type= 'helix')
 
-cal.reset()
+#first fill the calibration of the adjustable resistor
+calhorn.fillcalibdata()
+calhelix.fillcalibdata()
+
 #fill the installation information
-cal.filldetectors('horn')
-cal.filldetectors('helix')
+calhorn.filldetectors()
+calhelix.filldetectors()
 
 ## data holder:
 patinstallhorn = np.array([])
@@ -43,13 +45,13 @@ azhelix = np.array([])
 azhorn = np.array([])
 
 
-for det in cal.horndet:
-    patinstallhorn = np.append(patinstallhorn, cal.getpoweratinstall(det,typeofbaseline))
+for det in calhorn.det:
+    patinstallhorn = np.append(patinstallhorn, calhorn.getpoweratinstall(det,typeofbaseline))
     zenithhorn = np.append(zenithhorn, det.zenith)
     azhorn = np.append(azhorn, det.azimuth)
 
-for det in cal.helixdet:
-    patinstallhelix = np.append(patinstallhelix, cal.getpoweratinstall(det,typeofbaseline))
+for det in calhelix.det:
+    patinstallhelix = np.append(patinstallhelix, calhelix.getpoweratinstall(det,typeofbaseline))
     zenithhelix = np.append(zenithhelix, det.zenith)
     azhelix = np.append(azhelix, det.azimuth)
 
@@ -64,11 +66,11 @@ plt.show()
 
 ## write down the values (for the notebook)
 print ' helix detectors (in dBm):'
-for det in cal.helixdet:
-    print det.name , ' ' , "%.2f" % cal.getpoweratinstall(det,typeofbaseline) , ' +/- ' ,  "%.2f" %  (utils.adctov_board(det.stdBLyear)*(cal.boardslope))
+for det in calhelix.det:
+    print det.name , ' ' , "%.2f" % calhelix.getpoweratinstall(det,typeofbaseline) , ' +/- ' ,  "%.2f" %  (utils.adctov_board(det.stdBLyear)*(cal.boardslope))
 
 print '\n horn detectors (in dBm):'
-for det in cal.horndet:
-    print det.name , ' ' , "%.2f" % cal.getpoweratinstall(det,typeofbaseline) , ' +/- ' ,  "%.2f" %  (utils.adctov_board(det.stdBLyear)*(cal.boardslope))
+for det in calhorn.det:
+    print det.name , ' ' , "%.2f" % calhorn.getpoweratinstall(det,typeofbaseline) , ' +/- ' ,  "%.2f" %  (utils.adctov_board(det.stdBLyear)*(cal.boardslope))
 
 

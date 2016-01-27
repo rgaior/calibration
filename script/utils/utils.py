@@ -98,7 +98,22 @@ def getjacquesmeas(filename,filename2):
     f2.close()
     return [freq,diff]
 
+def readtwocolumns(inname):
+    f = open(inname,'r+')
+    x = np.array([])
+    y = np.array([])
+    for l in f:
+        lsplit = l.split()
+        x = np.append(x,float(lsplit[0]))
+        y = np.append(y,float(lsplit[1]))
+    f.close()
+    return [x,y]
 
+def writeintwocolumns(data, outname):
+    f = open(outname,'w+')
+    for x, y in zip(data[0],data[1]):
+        f.write(str(x) + ' ' + str(y) + '\n')
+    f.close()
 
 ###############################################
 #### conversion function (voltage to adc, #####
@@ -133,3 +148,16 @@ def quadraticerrordB(err1, err2):
 #    print 'error lin 1' , errlin1 ,' errlin2 = ', errlin2, 'errtot = ',errtot
     errtotdb = 10*np.log10(errtot +1)
     return errtotdb
+
+###############################################
+#### others                               #####
+###############################################
+
+def integratebw(data, linordb):
+    fstep = data[0][1]-data[0][0]
+    if linordb == 'linear':
+        int = np.sum(data[1])*fstep*1e6
+    if linordb == 'db':
+        lingain = np.power(10,(data[1])/10)
+        int = np.sum(lingain)*fstep*1e6
+    return int

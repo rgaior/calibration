@@ -14,20 +14,21 @@ import detector
 import calibration
 basefolder = cwd + '/../../data/'
 
-cal = calibration.Calibration(datafolder = basefolder)
+calhorn = calibration.Calibration(datafolder = basefolder, type= 'horn')
+calhelix = calibration.Calibration(datafolder = basefolder, type='helix')
 #first fill the calibration of the adjustable resistor
-cal.fillpotardata()
+calhorn.fillpotardata()
 
-dethorn = cal.filldetectors('horn')
-dethelix = cal.filldetectors('helix')
+dethorn = calhorn.filldetectors()
+dethelix = calhelix.filldetectors()
 
 adc = [0,500,1024]
 print 'adc to v front end: ', utils.adctov_fe(adc[0]), ' ' , utils.adctov_fe(adc[1]), ' ' , utils.adctov_fe(adc[2])
 print 'adc to v board: ', utils.adctov_board(adc[0]), ' ' , utils.adctov_board(adc[1]), ' ' , utils.adctov_board(adc[2])
 
-print 'size of dets = ', len(cal.horndet)
-for det in cal.horndet:
+print 'size of dets = ', len(calhorn.det)
+for det in calhorn.det:
     print det.type, ' ', det.name, ' ',  det.tankid , ' ', det.zenith, ' ' , det.azimuth, ' ' , det.antid, ' ' , det.elecid, ' ' ,  det.rotation , ' ', det.meanBL 
 print ' '
-for det in cal.helixdet:
+for det in calhelix.det:
     print det.type , ' ',  det.name, ' ',  det.tankid , ' ', det.zenith, ' ' , det.azimuth, ' ' , det.antid, ' ' , det.elecid, ' ' ,  det.rotation , ' ', det.meanBL 

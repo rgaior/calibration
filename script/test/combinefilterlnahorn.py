@@ -9,7 +9,14 @@ import sys
 cwd = os.getcwd()
 utilspath = cwd + '/../utils/'
 sys.path.append(utilspath)
+classpath = cwd + '/../classes/'
+sys.path.append(classpath)
 import utils
+import detector
+import calibration
+basefolder = cwd + '/../../data/'
+
+
 gainfolder = cwd + '/../../data/gain/'
 filterfolder = cwd + '/../../data/filter/'
 
@@ -68,8 +75,10 @@ meascable = utils.getjacquesmeas(filterfolder+'/scope_46.csv',filterfolder+'/sco
 
 #interpolate the gains to add them:
 newgainlnb = np.interp(freqfilt,freq,gainlnb)
-newgaincable =  np.interp(freqfilt,meascable[0],meascable[1])
+newgaincable =  np.interp(freqfilt,meascable[0]*1000,meascable[1])
 
+#plt.plot(freqfilt,newgaincable)
+#plt.show()
 
 totgain = newgainlnb + normedgain + newgaincable
 
@@ -80,14 +89,15 @@ sum = np.sum(newgainlin)*(freqfilt[1]- freqfilt[0])*1e6
 print 'sum = ' , sum
 print 'sum dB = ' , 10*np.log10(sum)
 
+
 plt.plot(freqfilt,newgainlnb,label='LNB only')
 plt.plot(freqfilt,newgainlnb + normedgain,label='LNB and board filter')
 plt.plot(freqfilt,totgain,label='total gain')
 #plt.plot(meascable[0],meascable[1],label='total gain')
 plt.xlabel('frequency [GHz]',fontsize=15)
 plt.ylabel('gain [dB]',fontsize=15)
-plt.xlim(800,2000)
 #plt.ylim(7,70)
+plt.xlim(800,2000)
 plt.ylim(60,70)
 plt.legend()
 plt.show()

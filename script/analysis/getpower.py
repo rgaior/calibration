@@ -22,17 +22,23 @@ if len(sys.argv) < 2:
 
 nameoftank = sys.argv[1]
 print 'name of tank = ', nameoftank
-cal = calibration.Calibration(datafolder = basefolder)
+calhorn = calibration.Calibration(datafolder = basefolder,type = 'horn')
+calhelix = calibration.Calibration(datafolder = basefolder,type='helix')
+
 #first fill the calibration of the adjustable resistor
-cal.fillpotardata()
+calhorn.fillcalibdata()
+calhelix.fillcalibdata()
 
 #fill the installation information
-cal.filldetectors('horn')
-cal.filldetectors('helix')
+calhorn.filldetectors()
+calhelix.filldetectors()
 
-## definition of the slope of the electronics board.
-## delP is the dynamic range (I guess 20dB) and delV is 2V
-#det = cal.getdetector('vieira')
-p = cal.getpoweratinstall(cal.getdetector(nameoftank))
+for det in calhorn.det:
+    if det.name == nameoftank:
+        p = calhorn.getpoweratinstall(calhorn.getdetector(nameoftank),'monit')
+for det in calhelix.det:
+    if det.name == nameoftank:
+        p = calhelix.getpoweratinstall(calhelix.getdetector(nameoftank),'monit')
+
 print 'power at install = ', p
 
