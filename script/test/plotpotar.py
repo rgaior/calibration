@@ -11,7 +11,7 @@ sys.path.append(utilspath)
 import utils
 
 #get the base of the field folder
-base = cwd + '/../../data/'
+base = cwd + '/../../data/potar/'
 
 ## data of the needed input power at 1.4GHz for a given rotation 
 ## for the voltage to be kept at -2V
@@ -34,7 +34,7 @@ ax1.set_ylabel('power at -2V [dBm]')
 ax1.plot(datahelix[0],datahelix[1],'b',lw=2,label='helix')
 ax1.plot([0],[-22],'bo',label='reference helix')
 ax1.plot(datacornet[0],datacornet[1],'g',lw=2,label='horn')
-ax1.plot([-14.5],[-19.3],'go',label='reference horn')
+ax1.plot([-13.5],[-18.8],'go',label='reference horn')
 
 plt.legend(loc=3)
 plt.show()

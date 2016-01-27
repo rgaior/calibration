@@ -1,0 +1,11 @@
+name id zenith azimuth antenna_id electronic_id rotation mean_beaseline year_baseline std_baseline
+Santy 339 0 0 6 10 0 192 152.4 4
+Rula 313 20 210 2 2 0 275.7 290.2 3.1
+Rula2 313 20 210 2 2 0 275.7 261 2.3
+Nono 340 20 270 8 8 -5  240.8 228.4 8.4
+Jorge 329 20 330  4 9 1 218.1 193.9 4.7
+Eva 330 20 30 3 3 0 250.6 277.2 2.9
+Gilda 334 20 90 11 7 0  312.8 332.6 5.4
+Gringa 328 20 150 5 5 2 233.5 206.3 2.2
+Gringa2 328 20 150 5 5 2 233.5 197.1 5.2
+Gringa3 328 20 150 5 5 2 233.5 224.8 1.8

@@ -17,6 +17,12 @@ sys.path.append(classpath)
 import utils
 import detector
 import calibration
+
+#usage:
+if len(sys.argv) != 2:
+    print 'usage : python plotdist <type of baseline wanted [install or monit]>'
+
+typeofbaseline= sys.argv[1]
 basefolder = cwd + '/../../data/'
 
 cal = calibration.Calibration(datafolder = basefolder)
@@ -36,12 +42,14 @@ zenithhorn = np.array([])
 azhelix = np.array([])
 azhorn = np.array([])
 
+
 for det in cal.horndet:
-    patinstallhorn = np.append(patinstallhorn, cal.getpoweratinstall(det))
+    patinstallhorn = np.append(patinstallhorn, cal.getpoweratinstall(det,typeofbaseline))
     zenithhorn = np.append(zenithhorn, det.zenith)
     azhorn = np.append(azhorn, det.azimuth)
+
 for det in cal.helixdet:
-    patinstallhelix = np.append(patinstallhelix, cal.getpoweratinstall(det))
+    patinstallhelix = np.append(patinstallhelix, cal.getpoweratinstall(det,typeofbaseline))
     zenithhelix = np.append(zenithhelix, det.zenith)
     azhelix = np.append(azhelix, det.azimuth)
 
@@ -57,9 +65,10 @@ plt.show()
 ## write down the values (for the notebook)
 print ' helix detectors (in dBm):'
 for det in cal.helixdet:
-    print det.name , ' ' , "%.2f" % cal.getpoweratinstall(det)
+    print det.name , ' ' , "%.2f" % cal.getpoweratinstall(det,typeofbaseline) , ' +/- ' ,  "%.2f" %  (utils.adctov_board(det.stdBLyear)*(cal.boardslope))
 
 print '\n horn detectors (in dBm):'
 for det in cal.horndet:
-    print det.name , ' ' , "%.2f" % cal.getpoweratinstall(det)
+    print det.name , ' ' , "%.2f" % cal.getpoweratinstall(det,typeofbaseline) , ' +/- ' ,  "%.2f" %  (utils.adctov_board(det.stdBLyear)*(cal.boardslope))
+
 
